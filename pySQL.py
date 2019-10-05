@@ -1,13 +1,12 @@
 import mysql.connector
 import getpass
+import time
 
 db = mysql.connector.connect(
       host = "localhost",
       user = "root",
       password = "root",
       database = "pysql")
-
-print("you need to login to see further information")
 
 # while True:
 #     userName = input("username : ")
@@ -21,44 +20,92 @@ print("you need to login to see further information")
 #     cursor.execute(query, data)
 #     db.commit()
 
+def catFun():
+    cursor = db.cursor()                
+    query = ("select * from pyshop where category = %s")
+    data = (cat, )
+    cursor.execute(query, data)
+    results = cursor.fetchall()
+    for x in results:
+        print(x)
+    cursor.close() 
+
 
 while True:
     print("")
     print("HELLO, WELCOME TO PYSHOP")
     print("")
     print("buy stuff from our newly optimized pyShop CLI")
-    print("just login")
     print("")
-    print("[USER]   usage : [-sc] [-sp] [-b] [-v]")
+    print("[USER]   usage : [-sc] [-sp] [-b] [-v] [-q]")
     print("[ADMIN]  usage : [-a] [-r] [-c]")
     print("")
 
-    userAdmin = input("you are a  (user / admin) : ") 
+    userAdmin = input("you are a : [USER] / [ADMIN] ") 
 
     #USER
 
-    if userAdmin == "user":
+    if userAdmin == "user":        
+        print("")
         print("optional arguements: ")        
         print("     -sc, --searchCat     search by category")
         print("     -sp, --searchPro     search by product name")
         print("     -b, --buy            buy stuff")
-        print("     -v, --view           browse products") 
+        print("     -v, --view           browse products and view everything")
+        print("     -q, --query          ask us to add some stuff into our database / feedback")
 
-        userInput = input("what you wanna do : ")
+        while True:
 
-        #SEARCHCAT
-        if userInput == "-sc" or userInput == "--searchCat":
-            cat = input("category : [type -cat to see the categories] : ")
-            if cat != "-cat":
-                cursor = db.cursor
-                query = 
+            print("")
+            userInput = input("[USER] pyshop ") 
+            print("")               
+
+            #SEARCHCAT
+            if userInput == "-sc" or userInput == "--searchCat":    
+                cat = input("category [type [-cat] to see the categories] : ")
+                if cat != "-cat":                    
+                    catFun()
+
+                elif cat == "-cat":
+                    print("search from : [food] [med] [phone] [laptop] [shoes] [apparel] [books] [appliance]")
+                    cat = input("select one from above : ")
+                    catFun()                        
+
+                elif cat not in ["food", "med", "phone", "laptop", "shoes", "apparel", "books", "appliance"]:
+                    print("sorry, the category hasn't been added on our database yet. Ask us to add stuff through the [-q] or [--query].")                    
+                
+                else:
+                    print("bruh.")
             
+            #SEARCH PRODUCT
+            if userInput == "-sp" or userInput == "--searchPro":    
+                pro = input("product name : ")
+                if pro != "-cat":                    
+                    catFun()
+
+                elif cat == "-cat":
+                    print("search from : [food] [med] [phone] [laptop] [shoes] [apparel] [books] [appliance]")
+                    cat = input("select one from above : ")
+                    catFun()                        
+
+                elif cat not in ["food", "med", "phone", "laptop", "shoes", "apparel", "books", "appliance"]:
+                    print("sorry, the category hasn't been added on our database yet. Ask us to add stuff through the [-q] or [--query].")                    
+                
+                else:
+                    print("bruh.")
+            #BUY
+            #QUERY
+            #VIEW
+                    
+            #LOGOUT
+            if userInput == "logout()" or userInput == "exit()":
+                break
 
 
     #ADMIN
 
     elif userAdmin == "admin":
-        adminPass = getpass.getpass(prompt='enter admin password : ')
+        adminPass = getpass.getpass(prompt='enter admin password ')
         if adminPass != "shubhro" and adminPass != "anand":
             print("please don't hack us :3 🙂🙂🙂")
 
@@ -132,4 +179,9 @@ while True:
                     print("--help       to see the command")
                     print("logout()     to log out")
                     print("")
-                    print("-------------------------")                       
+                    print("-------------------------")    
+
+    else:
+        print("what the fuck did you just type you fcking uneducated bitchass hoe i am kicking you out")  
+        time.sleep(10)
+        break
